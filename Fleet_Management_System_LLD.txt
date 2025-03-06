@@ -1,0 +1,104 @@
+Task 1 : Fleet Management System 
+
+1.1 User Management (UserController, UserService)
+
+Description: The user management system allows registration, retrieval, and authentication of users in the Fleet Management System. 
+
+Entities:
+         User:
+               id (Long)
+               username (String)
+               password (String, BCrypt encoded)
+               role (String, either ADMIN or DRIVER) 
+			   
+Controller: 
+           UserController: 
+		                  POST /users/register – Registers a new user with the given details (username, password, role).
+						  GET /users/{username} – Retrieves a user by their username.
+
+Service: 
+        UserService: 
+		            registerUser(User user) – Registers a new user, hashes the password, and saves the user to the database.
+					findByUsername(String username) – Retrieves a user by their username. 
+					
+Security: 
+Spring Security: Handles authentication and role-based authorization. The CustomUserDetailsService integrates with UserRepository to authenticate users. 
+
+
+2.1 Vehicle Management (VehicleController, VehicleService)
+
+Description: The vehicle management system allows admins to add, update, delete, and assign routes to vehicles. Drivers can view their assigned routes. 
+
+Entities:
+         Vehicle: 
+		         id (Long)
+                 model (String)
+                 licensePlate (String)
+                 fuelEfficiency (String)
+                 route (ManyToOne relation with Route) 
+				 
+Controller: 
+           VehicleController: 
+		                     POST /vehicles/add – Adds a new vehicle to the system.
+							 GET /vehicles/{id} – Retrieves vehicle details by ID.
+							 PUT /vehicles/update – Updates vehicle details.
+							 DELETE /vehicles/delete/{id} – Deletes a vehicle by ID.
+							 PUT /vehicles/{vehicleId}/assignRoute/{routeId} – Assigns a route to a vehicle (admin-only).
+							 GET /vehicles/{vehicleId}/route – Retrieves the route assigned to a vehicle (drivers can access this).
+							 
+Service: 
+        VehicleService: 
+		               addVehicle(Vehicle vehicle) – Saves a new vehicle to the database.
+					   getVehicle(Long id) – Retrieves a vehicle by ID.
+					   updateVehicle(Vehicle vehicle) – Updates vehicle information.
+					   deleteVehicle(Long id) – Deletes a vehicle by ID.
+					   assignRouteToVehicle(Long vehicleId, Long routeId) – Assigns a route to a vehicle. 
+					   
+3.1 Route Management (RouteController, RouteService) 
+
+Description: The route management system allows admins to add, view, and list routes for vehicles.
+
+Entities:
+         Route:
+		       id (Long)
+			   routeName (String)
+			   origin (String)
+			   destination (String)
+			   optimizedRoute (String)
+			   vehicles (OneToMany relation with Vehicle)
+			  
+Controller:
+           RouteController:
+                           POST /routes/add – Adds a new route to the system.
+                           GET /routes/{id} – Retrieves route details by ID.
+                           GET /routes/ – Lists all routes.
+
+Service:
+        RouteService:
+                     addRoute(Route route) – Saves a new route to the database.
+                     getRoute(Long id) – Retrieves a route by ID.
+                     getAllRoutes() – Retrieves all available routes. 
+
+
+4.1  Security Configuration (SecurityConfig)
+
+Description: The security configuration ensures proper authentication and authorization for users, including the use of roles (ADMIN and DRIVER).
+
+Security Filters:
+                 POST /users/register is publicly accessible for user registration.
+                 Other routes are secured:
+                                          Admin-only routes like /vehicles/** and /routes/**.
+                                          Driver-only routes like /drivers/** and /vehicles/{vehicleId}/route. 
+
+Custom UserDetailsService:
+Fetches users from the database and ensures that roles are prefixed with ROLE_ for Spring Security.
+
+
+5.1 Database Configuration (application.properties)
+
+Description: The application is configured to connect to a PostgreSQL database, and Spring Data JPA is used to interact with the database.
+
+PostgreSQL connection:
+                      spring.datasource.url: Defines the database URL.
+                      spring.datasource.username and spring.datasource.password: Database credentials.
+                      spring.jpa.hibernate.ddl-auto=update: Automatically updates the schema on startup.					  

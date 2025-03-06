@@ -1,0 +1,147 @@
+Task 1 : Fleet Management System 
+
+User Manual
+
+-- Admin User Registration -- 
+API Endpoint: POST /users/register
+Request URL: http://localhost:8080/users/register
+
+Request Body (JSON):
+{
+  "username": "admin",
+  "password": "adminpassword",
+  "role": "ROLE_ADMIN"
+}
+
+
+-- Admin Adding a Vehicle --
+API Endpoint: POST /vehicles/add
+Request URL: http://localhost:8080/vehicles/add
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Request Body (JSON):
+{
+  "model": "Ford Transit",
+  "licensePlate": "XYZ1234",
+  "fuelEfficiency": "15 km/l"
+} 
+
+
+-- Get Vehicle by ID -- 
+API Endpoint: GET /vehicles/{id}
+Request URL: http://localhost:8080/vehicles/1
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Response:
+{
+  "id": 1,
+  "model": "Ford Transit",
+  "licensePlate": "XYZ1234",
+  "fuelEfficiency": "15 km/l"
+} 
+
+
+-- Update Vehicle --
+API Endpoint: PUT /vehicles/update/{id}
+Request URL: http://localhost:8080/vehicles/update/1
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Request Body:
+{
+  "id": 1,
+  "model": "Mercedes Sprinter",
+  "licensePlate": "XYZ1234",
+  "fuelEfficiency": "14 km/l"
+}
+
+
+-- Delete Vehicle by ID -- 
+API Endpoint: DELETE /vehicles/delete/{id}
+Request URL: http://localhost:8080/vehicles/delete/1
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Response (No Content)
+
+
+-- Get All Vehicles --
+API Endpoint: GET /vehicles/
+Request URL: http://localhost:8080/vehicles/
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Response : (Array of Vehicles)
+
+
+-- Get User by Username --
+API Endpoint: GET /users/{username}
+Request URL: http://localhost:8080/users/Muthupandi
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Response:
+{
+  "id": 1,
+  "username": "Muthupandi",
+  "password": "Muthupandi",
+  "role": "ROLE_DRIVER"
+}
+
+
+-- Route Entity JSON --
+API Endpoint: POST /routes/add
+Request URL: http://localhost:8080/routes/add
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Request Body (JSON):
+{
+  "routeName": "Highway Route",
+  "origin": "Los Angeles",
+  "destination": "San Francisco",
+  "optimizedRoute": "Los Angeles -> Bakersfield -> Fresno -> San Francisco"
+}
+
+
+-- Get Route by ID --
+API Endpoint: GET /routes/{id}
+Request URL: http://localhost:8080/routes/
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Response:
+{
+  "id": 1,
+  "routeName": "Highway Route",
+  "origin": "Los Angeles",
+  "destination": "San Francisco",
+  "optimizedRoute": "Los Angeles -> Bakersfield -> Fresno -> San Francisco"
+}
+
+
+-- Admin Assigning a Route to a Vehicle --
+API Endpoint: PUT /vehicles/{vehicleId}/assignRoute/{routeId}
+Request URL: http://localhost:8080/vehicles/1/assignRoute/1 
+Authorization: Basic Auth(admin_username:admin_password) 
+
+Response: The updated vehicle with the assigned route. 
+
+
+
+
+-- Driver Viewing Assigned Route --
+API Endpoint: GET /vehicles/{vehicleId}/route
+Request URL: http://localhost:8080/drivers/vehicles/1/route 
+Authorization: Basic Auth(driver_username:driver_password)  
+
+Response:
+{
+    "id": 1,
+    "routeName": "Highway Route",
+    "origin": "Los Angeles",
+    "destination": "San Francisco",
+    "optimizedRoute": "Los Angeles -> Bakersfield -> Fresno -> San Francisco",
+    "vehicles": [
+        {
+            "id": 1,
+            "model": "Ford Transit",
+            "licensePlate": "XYZ1234",
+            "fuelEfficiency": "15 km/l",
+		}
+	]
+}
